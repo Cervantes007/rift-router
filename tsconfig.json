@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib/",
+    "declarationDir": "./lib/types/",
+    "module": "commonjs",
+    "target": "es2015",
+    "sourceMap": true,
+    "jsx": "react",
+    "declaration": true,
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
