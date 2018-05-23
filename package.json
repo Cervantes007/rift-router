@@ -1,6 +1,6 @@
 {
   "name": "rift-router",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description":
     "Blazing Fast and Lightweight router for React - Fully Reactive Router based on state first.",
   "main": "lib/index.js",

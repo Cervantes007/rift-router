@@ -1,3 +1,4 @@
-export * from "./RiftRouter";
-export * from "./RiftGate";
-export * from "./IRiftRoute";
+export * from './RiftRouter';
+export * from './RiftGate';
+export * from './RiftLink';
+export * from './IRiftRoute';

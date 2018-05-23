@@ -6,6 +6,10 @@ const routes: IRiftRoute[] = [
     component: () => 'home',
   },
   {
+    path: '*',
+    component: () => 'default',
+  },
+  {
     path: '/login',
     component: () => 'login',
   },
@@ -56,6 +60,13 @@ test('Test Home Route', () => {
   router.riftTo(path, false);
   expect(router.path).toBe(path);
   expect(router.active.components[0]()).toBe('home');
+});
+
+test('Default Route', () => {
+  const path = 'routeNotFound';
+  router.riftTo(path, false);
+  expect(router.path).toBe('routeNotFound');
+  expect(router.active.components[0]()).toBe('default');
 });
 
 test('Test Single Route none Home', () => {

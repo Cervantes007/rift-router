@@ -1,14 +1,16 @@
 import { action, observable } from 'mobx';
+import { IRiftRoute } from './IRiftRoute';
 
 export class RiftRouter {
   public routes: any[] = [];
   private index: number = 0;
+  private defaultRoute: any;
   @observable public path: string = location ? location.pathname : '/';
   @observable public params: any;
   @observable public search: any;
   @observable public active: any;
 
-  constructor(myRoutes) {
+  constructor(myRoutes: IRiftRoute[]) {
     this.routes = this.setRoutes([...myRoutes]);
     this.updateActiveRoute();
     if (window) {
@@ -43,6 +45,7 @@ export class RiftRouter {
 
   @action
   private updateActiveRoute() {
+    let useDefuaut = true;
     for (const route of this.routes) {
       const aux = this.checkMatch(route, this.path);
       const { match, params, pattern } = aux;
@@ -61,12 +64,20 @@ export class RiftRouter {
         if (location) {
           this.search = this.queryString(location.search);
         }
+        useDefuaut = false;
         break;
+      }
+    }
+    if (useDefuaut && this.defaultRoute && this.defaultRoute.path === '*') {
+      this.active = { ...this.defaultRoute };
+      this.params = {};
+      if (location) {
+        this.search = this.queryString(location.search);
       }
     }
   }
 
-  private setRoutes(routes: any[], components = [], parent = '', hooks: any = {}) {
+  private setRoutes(routes: IRiftRoute[], components = [], parent = '', hooks: any = {}) {
     let aux = [];
     for (const route of routes) {
       const { children, component, path, onEnter, onLeave } = route;
@@ -78,12 +89,21 @@ export class RiftRouter {
           })
         );
       } else {
-        aux.push({
-          path: parent + (path || '/'),
-          components: components.concat(component),
-          onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
-          onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
-        });
+        if (path === '*') {
+          this.defaultRoute = {
+            path: '*',
+            components: components.concat(component),
+            onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
+            onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
+          };
+        } else {
+          aux.push({
+            path: parent + (path || '/'),
+            components: components.concat(component),
+            onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
+            onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
+          });
+        }
       }
     }
     return aux;
