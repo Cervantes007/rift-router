@@ -12,6 +12,7 @@ export declare class RiftRouter {
   register(): number;
   riftTo(newPath: string, noUpdateBrowserHistory?: boolean): void;
   private updateActiveRoute();
+  private setActiveRoute(route, params);
   private setRoutes(routes, components?, parent?, hooks?);
   private checkMatch(route, currentPath);
   private queryString(querystring);

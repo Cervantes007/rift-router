@@ -51,29 +51,29 @@ export class RiftRouter {
       const { match, params, pattern } = aux;
       route.pattern = pattern;
       if (match) {
-        this.active && this.active.onLeave && this.active.onLeave(this);
-        if (route.onEnter) {
-          const redirectTo = route.onEnter(this);
-          if (typeof redirectTo === 'string') {
-            this.riftTo(redirectTo);
-            break;
-          }
-        }
-        this.active = { ...route };
-        this.params = params;
-        if (location) {
-          this.search = this.queryString(location.search);
-        }
+        this.setActiveRoute(route, params);
         useDefuaut = false;
         break;
       }
     }
     if (useDefuaut && this.defaultRoute && this.defaultRoute.path === '*') {
-      this.active = { ...this.defaultRoute };
-      this.params = {};
-      if (location) {
-        this.search = this.queryString(location.search);
+      this.setActiveRoute(this.defaultRoute, {});
+    }
+  }
+
+  private setActiveRoute(route, params) {
+    this.active && this.active.onLeave && this.active.onLeave(this);
+    if (route.onEnter) {
+      const redirectTo = route.onEnter(this);
+      if (typeof redirectTo === 'string') {
+        this.riftTo(redirectTo);
+        return;
       }
+    }
+    this.active = { ...route };
+    this.params = params;
+    if (location) {
+      this.search = this.queryString(location.search);
     }
   }
 
