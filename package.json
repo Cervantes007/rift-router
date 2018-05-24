@@ -1,6 +1,6 @@
 {
   "name": "rift-router",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description":
     "Blazing Fast and Lightweight router for React - Fully Reactive Router based on state first.",
   "main": "lib/index.js",
@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rm -rf ./lib && tsc",
     "format": "prettier --write './src/**/*.{ts,tsx}'",
-    "test": "jest --watch",
+    "test": "jest",
     "lint": "tslint './src/**/*.{ts,tsx}'",
     "precommit": "pretty-quick --staged"
   },

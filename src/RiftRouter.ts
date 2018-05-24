@@ -5,12 +5,13 @@ export class RiftRouter {
   public routes: any[] = [];
   private index: number = 0;
   private defaultRoute: any;
-  @observable public path: string = location ? location.pathname : '/';
+  @observable public path: string;
   @observable public params: any;
   @observable public search: any;
   @observable public active: any;
 
   constructor(myRoutes: IRiftRoute[]) {
+    this.path = location ? `${location.pathname}${location.search}${location.hash}` : '/';
     this.routes = this.setRoutes([...myRoutes]);
     this.updateActiveRoute();
     if (window) {
@@ -19,8 +20,8 @@ export class RiftRouter {
   }
 
   riftRouterBrowserSync() {
-    const path = location ? location.pathname : '/';
-    this.riftTo(path);
+    const path = location ? `${location.pathname}${location.search}${location.hash}` : '/';
+    this.riftTo(path !== 'blank' ? path : '/');
   }
 
   register() {
@@ -28,40 +29,43 @@ export class RiftRouter {
   }
 
   @action
-  riftTo(newPath: string, noUpdateBrowserHistory: boolean = true) {
+  riftTo(newPath: string = '/') {
+    if (!new RegExp(/^\//).test(newPath)) {
+      throw new SyntaxError(`The given url must start with /`);
+    }
     if (newPath !== this.path) {
-      let onClient = noUpdateBrowserHistory;
-      if (onClient === undefined) {
-        onClient = !!(window && window.document);
-      }
       this.path = newPath;
       this.index = 0;
       this.updateActiveRoute();
-      if (onClient && this.path !== window.location.pathname) {
-        window.history.pushState(null, null, this.path);
-      }
+      new RegExp(/^\//).test(location.pathname) && window.history.pushState(null, null, this.path);
     }
   }
 
   @action
   private updateActiveRoute() {
     let useDefuaut = true;
+    const aux = this.path.split('?');
+    const path = aux[0];
+    let search = {};
+    if (aux.length === 2) {
+      const [searchAux, hash] = aux[1].split('#');
+      search = aux.length === 2 ? this.queryString(`?${searchAux}`) : {};
+    }
     for (const route of this.routes) {
-      const aux = this.checkMatch(route, this.path);
-      const { match, params, pattern } = aux;
+      const { match, params, pattern } = this.checkMatch(route, path);
       route.pattern = pattern;
       if (match) {
-        this.setActiveRoute(route, params);
+        this.setActiveRoute(route, params, search);
         useDefuaut = false;
         break;
       }
     }
     if (useDefuaut && this.defaultRoute && this.defaultRoute.path === '*') {
-      this.setActiveRoute(this.defaultRoute, {});
+      this.setActiveRoute(this.defaultRoute);
     }
   }
 
-  private setActiveRoute(route, params) {
+  private setActiveRoute(route, params = {}, search = {}) {
     this.active && this.active.onLeave && this.active.onLeave(this);
     if (route.onEnter) {
       const redirectTo = route.onEnter(this);
@@ -72,9 +76,7 @@ export class RiftRouter {
     }
     this.active = { ...route };
     this.params = params;
-    if (location) {
-      this.search = this.queryString(location.search);
-    }
+    this.search = search;
   }
 
   private setRoutes(routes: IRiftRoute[], components = [], parent = '', hooks: any = {}) {
@@ -112,7 +114,7 @@ export class RiftRouter {
   private checkMatch(route: any, currentPath) {
     const { path = '/' } = route;
     let match = false;
-    const pattern = new RegExp(path.replace(/:[\D][\w]+/g, ':?([\\w]+)'));
+    const pattern = route.pattern || new RegExp(path.replace(/:[\D][\w]+/g, ':?([\\w]+)'));
     const keys = pattern.exec(path);
     let params = {};
     if (keys) {

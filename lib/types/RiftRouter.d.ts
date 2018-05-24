@@ -10,9 +10,9 @@ export declare class RiftRouter {
   constructor(myRoutes: IRiftRoute[]);
   riftRouterBrowserSync(): void;
   register(): number;
-  riftTo(newPath: string, noUpdateBrowserHistory?: boolean): void;
+  riftTo(newPath?: string): void;
   private updateActiveRoute();
-  private setActiveRoute(route, params);
+  private setActiveRoute(route, params?, search?);
   private setRoutes(routes, components?, parent?, hooks?);
   private checkMatch(route, currentPath);
   private queryString(querystring);
