@@ -1,0 +1,14 @@
+os: linux
+dist: trusty
+language: node_js
+node_js:
+  - "8"
+  - "10"
+cache: yarn
+install: yarn
+script:
+  - yarn test --coverage
+  - yarn build
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
