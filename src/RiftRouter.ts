@@ -10,17 +10,33 @@ export class RiftRouter {
   @observable public search: any;
   @observable public active: any;
 
-  constructor(myRoutes: IRiftRoute[]) {
-    this.path = location ? `${location.pathname}${location.search}${location.hash}` : '/';
+  constructor(myRoutes: IRiftRoute[], path?: string) {
     this.routes = this.setRoutes([...myRoutes]);
+
+    if (path) {
+      this.path = path;
+    } else {
+      try {
+        this.path = location ? `${location.pathname}${location.search}` : '/';
+      } catch (e) {
+        if (e.message !== 'location is not defined') {
+          console.log(e);
+        }
+      }
+    }
+
     this.updateActiveRoute();
-    if (window) {
-      window.addEventListener('popstate', this.riftRouterBrowserSync.bind(this));
+    try {
+      window && window.addEventListener('popstate', this.riftRouterBrowserSync.bind(this));
+    } catch (e) {
+      if (e.message !== 'window is not defined') {
+        console.log(e);
+      }
     }
   }
 
   riftRouterBrowserSync() {
-    const path = location ? `${location.pathname}${location.search}${location.hash}` : '/';
+    const path = location ? `${location.pathname}${location.search}` : '/';
     this.riftTo(path !== 'blank' ? path : '/');
   }
 
@@ -37,7 +53,14 @@ export class RiftRouter {
       this.path = newPath;
       this.index = 0;
       this.updateActiveRoute();
-      new RegExp(/^\//).test(location.pathname) && window.history.pushState(null, null, this.path);
+      try {
+        new RegExp(/^\//).test(location.pathname) &&
+          window.history.pushState(null, null, this.path);
+      } catch (e) {
+        if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
+          console.log(e);
+        }
+      }
     }
   }
 
@@ -47,7 +70,7 @@ export class RiftRouter {
     const aux = this.path.split('?');
     const path = aux[0];
     let search = {};
-    if (aux.length === 2) {
+    if (aux.length === 2 && aux[1]) {
       const [searchAux, hash] = aux[1].split('#');
       search = aux.length === 2 ? this.queryString(`?${searchAux}`) : {};
     }
