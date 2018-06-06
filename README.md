@@ -3,6 +3,7 @@
 Blazing Fast and Lightweight router for React and Mobx - Fully Reactive Router based on state first.
 
 ## Features
+
 * Lightweight 2kb (min/gzip).
 * Blazing Fast update app state first and then Browser Sync.
 * Reactive `params`, `search`, `path` and `active` router properties declare as mobx @observable.
@@ -21,88 +22,95 @@ Blazing Fast and Lightweight router for React and Mobx - Fully Reactive Router b
 ## Usage
 
 ```typescript
-    import * as React from 'react';
-    import * as ReactDOM from 'react-dom';
-    import { Provider } from 'mobx-react';
-    import { RiftGate, RiftLink, RiftRouter, IRiftRoute } from 'rift-router';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Provider } from 'mobx-react';
+import { RiftGate, RiftLink, RiftRouter, IRiftRoute } from 'rift-router';
 
-    const Home = () => <div>'Home Component'</div>;
-    const About = () => <div>'About Component'</div>;
+const Home = () => <div>'Home Component'</div>;
+const About = () => <div>'About Component'</div>;
 
-    const routes: IRiftRoute[] = [
-      { path: '/', component: () => <Home/>},
-      { path: '/about', component: () => <About/>},
-    ];
+const routes: IRiftRoute[] = [
+  { path: '/', component: () => <Home /> },
+  { path: '/about', component: () => <About /> },
+];
 
-    const router = new RiftRouter(routes);
-    const stores = {router};
+const router = new RiftRouter(routes);
+const stores = { router };
 
-    ReactDOM.render(
-      <Provider {...stores}>
-        <div>
-          <RiftLink to="/">Home</RiftLink> // navigate to Home Component
-          <RiftLink to="/about">About</RiftLink> // navigate to About Component
-
-          <RiftGate/> // render the component for active route.
-        </div>
-      </Provider>,
-      document.getElementById('root')
-    );
+ReactDOM.render(
+  <Provider {...stores}>
+    <div>
+      <RiftLink to="/">Home</RiftLink> // navigate to Home Component
+      <RiftLink to="/about">About</RiftLink> // navigate to About Component
+      <RiftGate /> // render the component for active route.
+    </div>
+  </Provider>,
+  document.getElementById('root')
+);
 ```
 
-#### and that it, try it.
+#### and that's it, try it.
 
 `RiftRouter` create a router instance with the routes receive in the constructor and then it's pass to `Provider`
 as store to be use deep in the component tree.
- `RiftRouter` API:
- * `path` (show current path)
- * `params` (for path = `/contacts/:id` - current route = 'contacts/5' - router.params = {id: 5})
- * `search` (for route = `/contacts?from=home` router.search = {from: "home"})
+
+`RiftRouter` API:
+
+* `path` (show current path)
+* `params` (for path = `/contacts/:id` - current route = 'contacts/5' - router.params = {id: 5})
+* `search` (for route = `/contacts?from=home` router.search = {from: "home"})
+
 The above porperties are mobx @observable you can use it in mobx reactions for your components.
 
 `RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
 use the same number of `RiftGate` to render the nested components in the active route.
 
 `RiftLink` have a `to` property that receive a string value with the route you want navigate to.
+
 `RiftLink` API:
+
 * `to` (string value to navigate if the user click the component)
 
 Note: `We assume you have configure your environment, rift-router is build to work with react and mobx`
 
-# How to use router object
+## How to use router object
 
-1. In your route inject the router instance as a component prop
+1.  In your route inject the router instance as a component prop
+
 ```typescript
-    const routes = [
-      { path: '/', component: (router) => <Home {...router}/>},
-      { path: '/about', component: () => <About/>},
-    ];
+const routes = [
+  { path: '/', component: router => <Home {...router} /> },
+  { path: '/about', component: () => <About /> },
+];
 ```
 
-2. In your component use the router prop to redirect
+2.  In your component use the router prop to redirect
+
 ```typescript
-    const Home = ({router: RiftRouter}) => {
-      const riftToAbout = () => router.riftTo('/about');
-      return (
-        <div>
-          <div>Home Component</div>
-          <button onClick={riftToAbout}>About us</button>
-        </div>
-      )
-    };
+const Home = ({ router: RiftRouter }) => {
+  const riftToAbout = () => router.riftTo('/about');
+  return (
+    <div>
+      <div>Home Component</div>
+      <button onClick={riftToAbout}>About us</button>
+    </div>
+  );
+};
 ```
 
-## Or just inject the router with `inject` of mobx-react, for class component use @inject decorator .
+#### Or just inject the router with `inject` of mobx-react, for class component use @inject decorator .
+
 ```typescript
-    const Home = inject('router')(({router: RiftRouter}) => {
-      const riftToAbout = () => router.riftTo('/about');
-      return (
-        <div>
-          <div>Home Component</div>
-          <button onClick={riftToAbout}>About us</button>
-        </div>
-      )
-    });
+const Home = inject('router')(({ router: RiftRouter }) => {
+  const riftToAbout = () => router.riftTo('/about');
+  return (
+    <div>
+      <div>Home Component</div>
+      <button onClick={riftToAbout}>About us</button>
+    </div>
+  );
+});
 ```
 
 And more...
