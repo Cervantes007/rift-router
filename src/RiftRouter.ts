@@ -20,7 +20,7 @@ export class RiftRouter {
         this.path = location ? `${location.pathname}${location.search}` : '/';
       } catch (e) {
         if (e.message !== 'location is not defined') {
-          console.log(e);
+          // console.log(e);
         }
       }
     }
@@ -30,7 +30,7 @@ export class RiftRouter {
       window && window.addEventListener('popstate', this.riftRouterBrowserSync.bind(this));
     } catch (e) {
       if (e.message !== 'window is not defined') {
-        console.log(e);
+        // console.log(e);
       }
     }
   }
@@ -58,7 +58,7 @@ export class RiftRouter {
           window.history.pushState(null, null, this.path);
       } catch (e) {
         if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
-          console.log(e);
+          // console.log(e);
         }
       }
     }
