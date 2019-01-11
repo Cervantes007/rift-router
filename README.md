@@ -6,7 +6,8 @@ Blazing Fast and Lightweight router for React Based on state first..
 
 ## Features
 
-- Lightweight 2kb (min/gzip).
+- Lightweight 1.6kb (min/gzip) - 4.3kb (min)
+- No Dependencies
 - Blazing Fast update app state first and then Browser Sync.
 - Useful route information in `params`, `search`, `path` and `active` router properties.
 - Typescript first class.
@@ -22,8 +23,6 @@ Blazing Fast and Lightweight router for React Based on state first..
 `npm install rift-router --save`
 
 ## Usage
-
-Check basic usage in a sandbox [![Edit RiftRouter Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/myq5nowwwp)
 
 ```typescript
 import React from 'react';
@@ -48,6 +47,10 @@ ReactDOM.render(
 );
 ```
 
+Check basic usage in a sandbox:
+
+[![Edit RiftRouter Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/myq5nowwwp)
+
 #### and that's it, try it.
 
 `RiftRouter` create a router instance and share it using `React.Context` to be use deep in the component tree using
@@ -56,32 +59,21 @@ ReactDOM.render(
 `RiftRouter` API:
 
 - `path` (show current path)
-- `params` (for path = `/contacts/:id` - current route = 'contacts/5' - router.params = {id: 5})
-- `search` (for route = `/contacts?from=home` router.search = {from: "home"})
+- `params` (for path = `/contacts/:id` - current route = 'contacts/5' -> `router.params` = `{id: 5}`)
+- `search` (for route = `/contacts?from=home` -> `router.search` = `{from: "home"}`)
 
 `RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
 use the same number of `RiftGate` to render the nested components in the active route.
 
-`RiftLink` have a `to` property that receive a string value with the route you want navigate to.
-
 `RiftLink` API:
 
-- `to` (string value to navigate if the user click the component)
+- `to` (string value to navigate on click event)
 
 Note: `We assume you have configure your environment, rift-router is build to work with react hooks`
 
 ## How to use router object
 
-1.  In your route inject the router instance as a component prop
-
-```typescript
-const routes: IRiftRoute[] = [
-  { path: '/', component: <Home /> },
-  { path: '/about', component: router => <About router={router} /> },
-];
-```
-
-2.  In your component use the router from RiftContext using useContext built-in hook.
+1.  In your component use the router from RiftContext using useContext built-in hook.
 
 ```typescript
 const Home = () => {
@@ -96,4 +88,15 @@ const Home = () => {
 };
 ```
 
-And more...
+2.  In your route inject the router instance as a component prop
+
+```typescript
+const routes: IRiftRoute[] = [
+  { path: '/', component: <Home /> },
+  { path: '/about', component: router => <About router={router} /> },
+];
+```
+
+TODO:
+
+- Add documentation for Hooks, Guard and Redirect.
