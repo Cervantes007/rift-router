@@ -1,14 +1,13 @@
-import { action, observable } from 'mobx';
 import { IRiftRoute } from './IRiftRoute';
 
-export class RiftRouter {
-  public routes: any[] = [];
+export class Router {
   private index: number = 0;
   private defaultRoute: any;
-  @observable public path: string;
-  @observable public params: any;
-  @observable public search: any;
-  @observable public active: any;
+  public routes: any[] = [];
+  public path: string;
+  public params: any;
+  public search: any;
+  public active: any;
 
   constructor(myRoutes: IRiftRoute[], path?: string) {
     this.routes = this.setRoutes([...myRoutes]);
@@ -40,11 +39,10 @@ export class RiftRouter {
     this.riftTo(path !== 'blank' ? path : '/');
   }
 
-  register() {
+  register = () => {
     return this.index++;
-  }
+  };
 
-  @action
   riftTo(newPath: string = '/') {
     if (!new RegExp(/^\//).test(newPath)) {
       throw new SyntaxError(`The given url must start with /`);
@@ -64,7 +62,6 @@ export class RiftRouter {
     }
   }
 
-  @action
   private updateActiveRoute() {
     let useDefuaut = true;
     const aux = this.path.split('?');
@@ -157,9 +154,12 @@ export class RiftRouter {
   private queryString(querystring: string) {
     const pattern = /\??([\w]+)=([\w]+)&?/g;
     let search = {};
-    querystring.replace(pattern, (substring, $1, $2): any => {
-      return (search = { ...search, ...{ [$1]: $2 } });
-    });
+    querystring.replace(
+      pattern,
+      (substring, $1, $2): any => {
+        return (search = { ...search, ...{ [$1]: $2 } });
+      }
+    );
     return search;
   }
 }

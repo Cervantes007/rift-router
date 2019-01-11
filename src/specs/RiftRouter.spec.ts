@@ -1,5 +1,5 @@
 import { IRiftRoute } from '../IRiftRoute';
-import { RiftRouter } from '../RiftRouter';
+import { Router } from '../Router';
 const routes: IRiftRoute[] = [
   {
     path: '',
@@ -58,7 +58,7 @@ const routes: IRiftRoute[] = [
   },
 ];
 
-const router = new RiftRouter(routes);
+const router = new Router(routes);
 
 test('Test Home Route', () => {
   const path = '/';

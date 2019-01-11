@@ -1,11 +1,20 @@
-import * as React from 'react';
-import { RiftRouter } from './RiftRouter';
-import { inject, observer } from 'mobx-react';
+import React, { useContext } from 'react';
+import { Router } from './Router';
+import { IRouter, RiftContext } from './RiftProvider';
 
-export const RiftGate = inject('router')(
-  observer((props: { router?: RiftRouter }) => {
-    const { router } = props;
-    const index: number = router.register();
-    return <React.Fragment>{router.active.components[index](props)}</React.Fragment>;
-  })
-);
+export const RiftGate = () => {
+  const router = useContext<IRouter>(RiftContext);
+  const index = router.register();
+  const component = router.active.components[index];
+  if (!component) {
+    console.error(
+      `RiftGate nested level: ${index} not will render component. Please check your routes`
+    );
+    return null;
+  }
+  return (
+    <React.Fragment>
+      {typeof component === 'function' ? component({ router }) : component}
+    </React.Fragment>
+  );
+};

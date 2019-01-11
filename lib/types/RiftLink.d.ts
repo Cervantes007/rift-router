@@ -1,11 +1,10 @@
-import { RiftRouter } from './RiftRouter';
-export declare const RiftLink: ((props: {
-    router?: RiftRouter;
+/// <reference types="react" />
+export declare const RiftLink: (
+  props: {
+    router?: any;
     to: string;
     className?: string;
-    onClick?: Function;
+    onClick?: (e: any) => void;
     children: any;
-}) => any) & {
-    wrappedComponent: any;
-    wrappedInstance: any;
-};
+  }
+) => JSX.Element;

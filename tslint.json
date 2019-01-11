@@ -6,6 +6,7 @@
     "function-name": false,
     "no-boolean-literal-compare": false,
     "strict-boolean-expressions": false,
-    "no-increment-decrement": false
+    "no-increment-decrement": false,
+    "import-name": false
   }
 }

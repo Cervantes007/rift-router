@@ -1,7 +1,7 @@
 export interface IRiftRoute {
   path: string;
-  component: Function;
+  component: any;
   children?: IRiftRoute[];
-  onEnter?: Function;
-  onLeave?: Function;
+  onEnter?: () => void;
+  onLeave?: () => void;
 }
