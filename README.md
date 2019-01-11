@@ -23,9 +23,7 @@ Blazing Fast and Lightweight router for React Based on state first..
 
 ## Usage
 
-Check basic usage in a sandbox https://codesandbox.io/s/myq5nowwwp
-
-[![Edit RiftRouter Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/myq5nowwwp)
+Check basic usage in a sandbox [![Edit RiftRouter Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/myq5nowwwp)
 
 ```typescript
 import React from 'react';
