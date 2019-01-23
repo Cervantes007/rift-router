@@ -1,6 +1,6 @@
 {
   "name": "rift-router",
-  "version": "0.9.1-beta.0",
+  "version": "1.0.0",
   "description": "Blazing Fast and Lightweight router for React Based on state first.",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
