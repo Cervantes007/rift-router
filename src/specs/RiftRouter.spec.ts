@@ -6,7 +6,7 @@ const routes: IRiftRoute[] = [
     component: () => 'home',
   },
   {
-    path: '/redirect',
+    path: 'redirect',
     component: () => 'redirect',
     onEnter: () => '/',
   },
@@ -19,7 +19,7 @@ const routes: IRiftRoute[] = [
     component: () => 'login',
   },
   {
-    path: '',
+    path: '///',
     component: () => '/',
     children: [
       {
@@ -43,22 +43,27 @@ const routes: IRiftRoute[] = [
     ],
   },
   {
-    path: '/admin',
+    path: 'admin',
     component: () => 'admin',
     children: [
       {
-        path: '/users',
+        path: 'users',
         component: () => 'users',
       },
       {
-        path: '/users/:id?',
+        path: 'users/:id?',
         component: () => 'users editor',
       },
     ],
   },
 ];
 
+const routerSSR = new Router(routes, '/login');
 const router = new Router(routes);
+
+test('SSR', () => {
+  expect(routerSSR.active.components[0]()).toBe('login');
+});
 
 test('Test Home Route', () => {
   const path = '/';

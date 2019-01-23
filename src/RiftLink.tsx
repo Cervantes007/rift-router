@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { IRouter, RiftContext } from './RiftProvider';
 
 export const RiftLink = (props: {
-  router?;
   to: string;
   className?: string;
   onClick?: (e) => void;

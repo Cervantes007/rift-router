@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Router } from './Router';
 import { IRouter, RiftContext } from './RiftProvider';
 
 export const RiftGate = () => {

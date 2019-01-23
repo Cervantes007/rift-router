@@ -11,16 +11,15 @@ export class Router {
 
   constructor(myRoutes: IRiftRoute[], path?: string) {
     this.routes = this.setRoutes([...myRoutes]);
-
     if (path) {
       this.path = path;
     } else {
       try {
         this.path = location ? `${location.pathname}${location.search}` : '/';
       } catch (e) {
-        if (e.message !== 'location is not defined') {
-          // console.log(e);
-        }
+        // if (e.message !== 'location is not defined') {
+        //   // console.log(e);
+        // }
       }
     }
 
@@ -28,9 +27,9 @@ export class Router {
     try {
       window && window.addEventListener('popstate', this.riftRouterBrowserSync.bind(this));
     } catch (e) {
-      if (e.message !== 'window is not defined') {
-        // console.log(e);
-      }
+      // if (e.message !== 'window is not defined') {
+      //   // console.log(e);
+      // }
     }
   }
 
@@ -55,9 +54,9 @@ export class Router {
         new RegExp(/^\//).test(location.pathname) &&
           window.history.pushState(null, null, this.path);
       } catch (e) {
-        if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
-          // console.log(e);
-        }
+        // if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
+        //   // console.log(e);
+        // }
       }
     }
   }
@@ -102,7 +101,9 @@ export class Router {
   private setRoutes(routes: IRiftRoute[], components = [], parent = '', hooks: any = {}) {
     let aux = [];
     for (const route of routes) {
-      const { children, component, path, onEnter, onLeave } = route;
+      const { children, component, path: routePath, onEnter, onLeave } = route;
+      // User Validation: allow use 'home' without '/' at first character at any route level (able on children to)
+      const path = routePath.startsWith('/') || routePath === '*' ? routePath : `/${routePath}`;
       if (children) {
         aux = aux.concat(
           this.setRoutes(children, components.concat(component), parent + path, {
@@ -119,8 +120,9 @@ export class Router {
             onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
           };
         } else {
+          // Enforce: set clean 'path' url '//review' = '/review' - '////review//6' = '/review/6'
           aux.push({
-            path: parent + (path || '/'),
+            path: (parent + (path || '/')).replace(/(\/)\1+/g, '/'),
             components: components.concat(component),
             onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
             onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
