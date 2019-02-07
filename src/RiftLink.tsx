@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { IRouter, RiftContext } from './RiftProvider';
+import { IRouter } from './IRiftRoute';
+import { RiftContext } from './RiftProvider';
 
 export const RiftLink = (props: {
   to: string;
   className?: string;
   onClick?: (e) => void;
-  children: any;
+  children: React.ReactNode | React.ReactNode[];
 }) => {
   const { to, onClick, className, children } = props;
   const router = useContext<IRouter>(RiftContext);

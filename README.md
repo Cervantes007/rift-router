@@ -1,7 +1,5 @@
 # rift-router ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Build Status](https://travis-ci.org/Cervantes007/rift-router.svg?branch=master)](https://travis-ci.org/Cervantes007/rift-router) [![codecov](https://codecov.io/gh/Cervantes007/rift-router/branch/master/graph/badge.svg)](https://codecov.io/gh/Cervantes007/rift-router)
 
-Waiting for React Hooks, please use v0.2.7 with mobx and mobx-react until hooks will be released.
-
 Blazing Fast and Lightweight router for React Based on state first..
 
 ## Features
@@ -53,31 +51,78 @@ Check basic usage in a sandbox:
 
 #### and that's it, try it.
 
-`RiftRouter` create a router instance and share it using `React.Context` to be use deep in the component tree using
-`useContext` hook.
+## Routes object options.
 
-`RiftRouter` API:
+#### Using Hooks:
 
-- `path` (show current path)
-- `params` (for path = `/contacts/:id` - current route = 'contacts/5' -> `router.params` = `{id: 5}`)
-- `search` (for route = `/contacts?from=home` -> `router.search` = `{from: "home"}`)
+```typescript
+function isUserLogged() {...}
+const routes = [
+    {
+        path: '/users',
+        component: <UserList />,
+        onLeave: () => '...Do some logic when current route will change',
+        onEnter: () => {
+            if(!isUserLogged()) {
+                return '/';
+            }
+        }
+    }
+]
+```
 
-`RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
-use the same number of `RiftGate` to render the nested components in the active route.
+`onEnter` run just before set new route, therefore it can be used as route Guard, if `onEnter` return an string value, the router will redirect to this value.
 
-`RiftLink` API:
+#### Handle route not match
 
-- `to` (string value to navigate on click event)
+```typescript
+const routes = [
+  // Default route (*) redirect to '/'
+  { path: '*', onEnter: () => '/' },
+  // Default route keep browser url and show Home component
+  { path: '*', component: <Home /> },
+  // Default route show Not Found Page component
+  { path: '*', component: <NotFound404 /> },
+];
+```
 
-Note: `We assume you have configure your environment, rift-router is build to work with react hooks`
+#### Nesting routes
 
-## How to use router object
+```typescript
+const routes: IRiftRoute[] = [
+  {
+    path: '/admin',
+    component: () => 'admin',
+    children: [
+      {
+        path: '/users',
+        component: () => 'users',
+      },
+      {
+        path: '/users/:id?',
+        component: () => 'users editor',
+      },
+    ],
+  },
+];
+```
 
-1.  In your component use the router from RiftContext using useContext built-in hook.
+For each nesting you must place a `<RiftGate/>` component to display current nesting component.
+
+### `router` instance API:
+
+- `path` (show current path - `router.path` -> '/users')
+- `params` (for path = `/users/:id` - current route = 'users/5' -> `router.params` = `{id: 5}`)
+- `search` (for route = `/users?from=home` -> `router.search` = `{from: "home"}`)
+- `to` function receive a `string` parameter for navigate to (router.to('/users'))
+
+## How to get router object
+
+1.  In your component use the router from RiftContext using useRouter hook.
 
 ```typescript
 const Home = () => {
-  const router = useContext(RiftContext);
+  const router = useRouter();
   const toAbout = () => router.to('/about');
   return (
     <div>
@@ -88,15 +133,32 @@ const Home = () => {
 };
 ```
 
-2.  In your route inject the router instance as a component prop
+2.  In your route inject the router instance as a `component` prop, same for `onEnter` and `onLeave` hooks
 
 ```typescript
 const routes: IRiftRoute[] = [
-  { path: '/', component: <Home /> },
+  { path: '/', component: <Home />, onEnter: router => {...} },
   { path: '/about', component: router => <About router={router} /> },
 ];
 ```
 
-TODO:
+## How it Work.
 
-- Add documentation for Hooks, Guard and Redirect.
+`RiftRouter` create a router instance and share it using `React.Context` to be use deep in the component tree using
+`useRouter` hook.
+
+`RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
+use the same number of `RiftGate` to render the nested components in the active route.
+
+`RiftLink` API:
+
+- `to` (string value to navigate on click event)
+
+Note: `We assume you have configure your environment, rift-router is build to work with react hooks`
+
+## TODO:
+
+#### Add Documentation for
+
+- Code Splitting
+- Server Side Rendering Example.

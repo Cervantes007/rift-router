@@ -1,10 +1,19 @@
 {
   "name": "rift-router",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Blazing Fast and Lightweight router for React Based on state first.",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
   "author": "Cervantes007",
+  "keywords": [
+    "router",
+    "react",
+    "rift",
+    "rift-router",
+    "lightweight",
+    "fast",
+    "typescript"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Cervantes007/rift-router.git"
@@ -17,17 +26,20 @@
     "lint": "tslint './src/**/*.{ts,tsx}'",
     "precommit": "pretty-quick --staged"
   },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
   "devDependencies": {
-    "@types/jest": "^23.3.12",
+    "@types/jest": "^24.0.0",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "husky": "^0.14.3",
-    "jest": "^23.1.0",
+    "jest": "^24.1.0",
     "prettier": "^1.15.3",
     "pretty-quick": "^1.4.1",
-    "react": "16.8.0-alpha.0",
-    "react-dom": "16.8.0-alpha.0",
-    "ts-jest": "^22.4.6",
+    "react": "16.8.1",
+    "react-dom": "16.8.1",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.7.0",
     "tslint-config-prettier": "^1.9.0",

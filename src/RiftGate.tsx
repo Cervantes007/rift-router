@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { IRouter, RiftContext } from './RiftProvider';
+import { IRouter } from './IRiftRoute';
+import { RiftContext } from './RiftProvider';
 
 export const RiftGate = () => {
   const router = useContext<IRouter>(RiftContext);
-  const index = router.register();
+  const index = (router as any).register();
   if (!router.active) {
     console.error(`RiftGate nested level: ${index} have no active component`);
     return null;

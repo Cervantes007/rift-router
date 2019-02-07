@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { Router } from './Router';
-export interface IRouter {
-  params?: any;
-  active?: any;
-  search?: any;
-  path?: string;
-  to?: (path: string) => void;
-  register?: () => number;
-}
-const initialValue: IRouter = {};
+import { IRouter } from './IRiftRoute';
+
+const initialValue: IRouter = new Router([]);
 export const RiftContext = React.createContext(initialValue);
 
 export const RiftProvider = ({ children, routes }) => {
@@ -22,7 +16,7 @@ export const RiftProvider = ({ children, routes }) => {
   const [state, setState]: any = useState(buildState());
 
   const to = path => {
-    router.riftTo(path);
+    router.to(path);
     setState(buildState());
   };
 

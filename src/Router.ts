@@ -1,6 +1,6 @@
-import { IRiftRoute } from './IRiftRoute';
+import { IRiftRoute, IRouter } from './IRiftRoute';
 
-export class Router {
+export class Router implements IRouter {
   private index: number = 0;
   private defaultRoute: any;
   public routes: any[] = [];
@@ -35,14 +35,14 @@ export class Router {
 
   riftRouterBrowserSync() {
     const path = location ? `${location.pathname}${location.search}` : '/';
-    this.riftTo(path !== 'blank' ? path : '/');
+    this.to(path !== 'blank' ? path : '/');
   }
 
   register = () => {
     return this.index++;
   };
 
-  riftTo(newPath: string = '/') {
+  to(newPath: string = '/') {
     if (!new RegExp(/^\//).test(newPath)) {
       throw new SyntaxError(`The given url must start with /`);
     }
@@ -89,7 +89,7 @@ export class Router {
     if (route.onEnter) {
       const redirectTo = route.onEnter(this);
       if (typeof redirectTo === 'string') {
-        this.riftTo(redirectTo);
+        this.to(redirectTo);
         return;
       }
     }
