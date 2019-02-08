@@ -12,8 +12,10 @@ export const RiftLink = (props: {
   const router = useContext<IRouter>(RiftContext);
 
   const click = e => {
-    router.to(to);
-    typeof onClick === 'function' && onClick(e);
+    if (router.path !== to) {
+      router.to(to);
+      typeof onClick === 'function' && onClick(e);
+    }
   };
 
   return (

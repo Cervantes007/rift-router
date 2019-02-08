@@ -2,11 +2,11 @@ import { IRiftRoute } from '../IRiftRoute';
 import { Router } from '../Router';
 const routes: IRiftRoute[] = [
   {
-    path: '',
+    path: '/',
     component: () => 'home',
   },
   {
-    path: 'redirect',
+    path: '/redirect',
     component: () => 'redirect',
     onEnter: () => '/',
   },
@@ -19,7 +19,7 @@ const routes: IRiftRoute[] = [
     component: () => 'login',
   },
   {
-    path: '///',
+    path: '',
     component: () => '/',
     children: [
       {
@@ -43,15 +43,19 @@ const routes: IRiftRoute[] = [
     ],
   },
   {
-    path: 'admin',
+    path: '/admin',
     component: () => 'admin',
     children: [
       {
-        path: 'users',
+        path: '',
+        component: () => 'Admin Dashboard',
+      },
+      {
+        path: '/users',
         component: () => 'users',
       },
       {
-        path: 'users/:id?',
+        path: '/users/:id?',
         component: () => 'users editor',
       },
     ],
@@ -142,6 +146,14 @@ test('Test Query String', () => {
   expect(router.search).toEqual({ type: 'plumber' });
   expect(router.active.components[0]()).toBe('/');
   expect(router.active.components[1]()).toBe('contacts');
+});
+
+test('Test Route Dashboard', () => {
+  const path = '/admin';
+  router.to(path);
+  expect(router.path).toBe('/admin');
+  expect(router.active.components[0]()).toBe('admin');
+  expect(router.active.components[1]()).toBe('Admin Dashboard');
 });
 
 test('Test OnEnter Guard Redirect', () => {

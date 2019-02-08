@@ -43,16 +43,12 @@ export class Router implements IRouter {
   };
 
   to(newPath: string = '/') {
-    if (!new RegExp(/^\//).test(newPath)) {
-      throw new SyntaxError(`The given url must start with /`);
-    }
     if (newPath !== this.path) {
       this.path = newPath;
       this.index = 0;
       this.updateActiveRoute();
       try {
-        new RegExp(/^\//).test(location.pathname) &&
-          window.history.pushState(null, null, this.path);
+        window.history.pushState(null, null, this.path);
       } catch (e) {
         // if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
         //   // console.log(e);
@@ -101,9 +97,7 @@ export class Router implements IRouter {
   private setRoutes(routes: IRiftRoute[], components = [], parent = '', hooks: any = {}) {
     let aux = [];
     for (const route of routes) {
-      const { children, component, path: routePath, onEnter, onLeave } = route;
-      // User Validation: allow use 'home' without '/' at first character at any route level (able on children to)
-      const path = routePath.startsWith('/') || routePath === '*' ? routePath : `/${routePath}`;
+      const { children, component, path, onEnter, onLeave } = route;
       if (children) {
         aux = aux.concat(
           this.setRoutes(children, components.concat(component), parent + path, {
@@ -122,7 +116,7 @@ export class Router implements IRouter {
         } else {
           // Enforce: set clean 'path' url '//review' = '/review' - '////review//6' = '/review/6'
           aux.push({
-            path: (parent + (path || '/')).replace(/(\/)\1+/g, '/'),
+            path: (parent + (path || '')).replace(/(\/)\1+/g, '/'),
             components: components.concat(component),
             onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
             onLeave: hooks.onLeave ? hooks.onLeave : onLeave,

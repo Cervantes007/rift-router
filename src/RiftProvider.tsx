@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Router } from './Router';
 import { IRouter } from './IRiftRoute';
 
@@ -16,13 +16,13 @@ export const RiftProvider = ({ children, routes }) => {
   const [state, setState]: any = useState(buildState());
 
   const to = path => {
-    router.to(path);
-    setState(buildState());
+    if (router.path !== path) {
+      router.to(path);
+      setState(buildState());
+    }
   };
 
-  return (
-    <RiftContext.Provider value={{ ...state, to, register: router.register }}>
-      {children}
-    </RiftContext.Provider>
-  );
+  const contextValue = useMemo(() => ({ ...state, to, register: router.register }), [state]);
+
+  return <RiftContext.Provider value={contextValue}>{children}</RiftContext.Provider>;
 };
