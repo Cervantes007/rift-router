@@ -8,12 +8,11 @@ export declare class Router implements IRouter {
   search: any;
   active: any;
   constructor(myRoutes: IRiftRoute[], path?: string);
-  riftRouterBrowserSync(): void;
   register: () => number;
-  to(newPath?: string): void;
+  to(newPath?: string, fromHistory?: boolean): void;
   private updateActiveRoute;
   private setActiveRoute;
-  private setRoutes;
+  setRoutes(routes: IRiftRoute[], components?: any[], parent?: string, hooks?: any): any[];
   private checkMatch;
   private queryString;
 }

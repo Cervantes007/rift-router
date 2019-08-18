@@ -19,6 +19,10 @@ const routes: IRiftRoute[] = [
     component: () => 'login',
   },
   {
+    path: '/admin/add-edit-user/:id?',
+    component: () => 'testManuel',
+  },
+  {
     path: '',
     component: () => '/',
     children: [
@@ -90,6 +94,14 @@ test('Test Single Route none Home', () => {
   expect(router.active.components[0]()).toBe('login');
 });
 
+test('Test Manuel', () => {
+  const path = '/admin/add-edit-user/NGM2OGUyMzYwNDM4MTNhMmUyOTFmZmY4NTgzNzk5ZjY6MQ';
+  router.to(path);
+  expect(router.path).toBe(path);
+  expect(router.params).toEqual({ id: 'NGM2OGUyMzYwNDM4MTNhMmUyOTFmZmY4NTgzNzk5ZjY6MQ' });
+  expect(router.active.components[0]()).toBe('testManuel');
+});
+
 test('Test Level 2 Nested Route', () => {
   const path = '/contacts';
   router.to(path);
@@ -159,12 +171,6 @@ test('Test Route Dashboard', () => {
 test('Test OnEnter Guard Redirect', () => {
   const path = '/redirect';
   router.to(path);
-  expect(router.path).toBe('/');
-  expect(router.active.components[0]()).toBe('home');
-});
-
-test('Test BrowserSync', () => {
-  router.riftRouterBrowserSync();
   expect(router.path).toBe('/');
   expect(router.active.components[0]()).toBe('home');
 });

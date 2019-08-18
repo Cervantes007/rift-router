@@ -1,28 +1,45 @@
-import React, { useMemo, useState } from 'react';
+import React, { Component } from 'react';
 import { Router } from './Router';
 import { IRouter } from './IRiftRoute';
 
-const initialValue: IRouter = new Router([]);
+const initialValue: IRouter | any = {};
 export const RiftContext = React.createContext(initialValue);
+let router: Router;
 
-export const RiftProvider = ({ children, routes }) => {
-  const router = new Router(routes);
-
-  const buildState = () => {
+export class RiftProvider extends Component<{ children: any; routes: any }> {
+  constructor(props) {
+    super(props);
+    router = new Router(props.routes);
     const { params, active, search, path } = router;
-    return { params, active, search, path };
+    this.state = { params, active, search, path };
+
+    try {
+      window &&
+        window.addEventListener('popstate', () => {
+          const path = location ? `${location.pathname}${location.search}` : '/';
+          this.to(path !== 'blank' ? path : '/', true);
+        });
+    } catch (e) {
+      // if (e.message !== 'window is not defined') {
+      //   // console.log(e);
+      // }
+    }
+  }
+
+  updateState = () => {
+    const { params, active, search, path } = router;
+    this.setState({ params, active, search, path });
   };
 
-  const [state, setState]: any = useState(buildState());
-
-  const to = path => {
+  to = (path, fromHistory = false) => {
     if (router.path !== path) {
-      router.to(path);
-      setState(buildState());
+      router.to(path, fromHistory);
+      this.updateState();
     }
   };
 
-  const contextValue = useMemo(() => ({ ...state, to, register: router.register }), [state]);
-
-  return <RiftContext.Provider value={contextValue}>{children}</RiftContext.Provider>;
-};
+  render() {
+    const contextValue = { ...this.state, to: this.to, register: router.register };
+    return <RiftContext.Provider value={contextValue}>{this.props.children}</RiftContext.Provider>;
+  }
+}

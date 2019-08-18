@@ -24,35 +24,25 @@ export class Router implements IRouter {
     }
 
     this.updateActiveRoute();
-    try {
-      window && window.addEventListener('popstate', this.riftRouterBrowserSync.bind(this));
-    } catch (e) {
-      // if (e.message !== 'window is not defined') {
-      //   // console.log(e);
-      // }
-    }
-  }
-
-  riftRouterBrowserSync() {
-    const path = location ? `${location.pathname}${location.search}` : '/';
-    this.to(path !== 'blank' ? path : '/');
   }
 
   register = () => {
     return this.index++;
   };
 
-  to(newPath: string = '/') {
-    if (newPath !== this.path) {
+  to(newPath: string = '/', fromHistory = false) {
+    if (newPath !== this.path || fromHistory) {
       this.path = newPath;
       this.index = 0;
       this.updateActiveRoute();
-      try {
-        window.history.pushState(null, null, this.path);
-      } catch (e) {
-        // if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
-        //   // console.log(e);
-        // }
+      if (!fromHistory) {
+        try {
+          window.history.pushState(null, null, this.path);
+        } catch (e) {
+          // if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
+          //   // console.log(e);
+          // }
+        }
       }
     }
   }
@@ -94,7 +84,7 @@ export class Router implements IRouter {
     this.search = search;
   }
 
-  private setRoutes(routes: IRiftRoute[], components = [], parent = '', hooks: any = {}) {
+  public setRoutes(routes: IRiftRoute[], components = [], parent = '', hooks: any = {}) {
     let aux = [];
     for (const route of routes) {
       const { children, component, path, onEnter, onLeave } = route;
