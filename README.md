@@ -4,7 +4,7 @@ Blazing Fast and Lightweight router for React Based on state first..
 
 ## Features
 
-- Lightweight 1.6kb (min/gzip) - 4.3kb (min)
+- Lightweight 1.8kb (min/gzip) - 5kb (min)
 - No Dependencies
 - Blazing Fast update app state first and then Browser Sync.
 - Useful route information in `params`, `search`, `path` and `active` router properties.
@@ -150,7 +150,7 @@ Caveat: `React.lazy and Suspense are not yet available for server-side rendering
 
 ## How to get router object
 
-1.  In your component use the router from RiftContext using useRouter hook.
+Option 1: In your component use the router from RiftContext using useRouter hook.
 
 ```typescript
 const Home = () => {
@@ -165,7 +165,7 @@ const Home = () => {
 };
 ```
 
-2.  In your route inject the router instance as a `component` prop, same for `onEnter` and `onLeave` hooks
+Option 2: In your route inject the router instance as a `component` prop, same for `onEnter` and `onLeave` hooks
 
 ```typescript
 const routes: IRiftRoute[] = [
@@ -176,22 +176,13 @@ const routes: IRiftRoute[] = [
 
 ## How it Work.
 
-Pass your `routes` to `RiftProvider` and it will create a router instance and share it through `React.Context` to be use deep in the component tree
-with the `useRouter` hook.
-`RiftProvider` also accept a `fallback` prop where you can provide a component to will be shown by all yours `RiftGate` while lazy components finish to load.
-ex. `<RiftProvider routes={routes} fallback={<div>loading...</div>}>...</RiftProvider>`
+1. Pass your `routes` to `RiftProvider` and it will create a router instance and share it through `React.Context` to be use deep in the component tree
+   with the `useRouter` hook.
+   `RiftProvider` also accept a `fallback` prop where you can provide a component to will be shown by all yours `RiftGate` while lazy components finish to load.
 
-`RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
-use the same number of `RiftGate` to render the nested components in the active route. Also accept a `fallback` prop
-where you can provide a component to show while lazy components finish to load, this will override the `fallback` of the `RiftProvider`.
-ex. `<RiftGate fallback={<div>loading...</div>} />`
-
-`RiftLink` API:
-
-- `to` (string value to navigate on click event)
-  ex. `<RiftLink to="/users" />`
-
-Note: `you need to use react@16.8.0 version or superior`
+2. `RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
+   use the same number of `RiftGate` to render the nested components in the active route. Also accept a `fallback` prop
+   where you can provide a component to show while lazy components finish to load, this will override the `fallback` of the `RiftProvider`.
 
 ## TODO:
 
