@@ -8,6 +8,7 @@ export class Router implements IRouter {
   public params: any;
   public search: any;
   public active: any;
+  public fallback: any;
 
   constructor(myRoutes: IRiftRoute[], path?: string) {
     this.routes = this.setRoutes([...myRoutes]);

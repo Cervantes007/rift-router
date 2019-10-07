@@ -1,8 +1,12 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, Suspense } from 'react';
 import { IRouter } from './IRiftRoute';
 import { RiftContext } from './RiftProvider';
 
-export const RiftGate = () => {
+interface IRiftGate {
+  fallback?: any;
+}
+
+export const RiftGate = ({ fallback }: IRiftGate) => {
   const router = useContext<IRouter>(RiftContext);
   const { active } = router;
   const render = useMemo(
@@ -15,8 +19,19 @@ export const RiftGate = () => {
       }
       const component = active.components[index];
       if (!component) {
+        if (active.components.length > index) {
+          return <RiftGate />;
+        }
         console.error(message);
         return null;
+      }
+      if (component.$$typeof && component.$$typeof.toString() === 'Symbol(react.lazy)') {
+        const Component = component;
+        return (
+          <Suspense fallback={fallback || router.fallback || <div>Loading...</div>}>
+            <Component />
+          </Suspense>
+        );
       }
       return typeof component === 'function' ? component({ router }) : component;
     },

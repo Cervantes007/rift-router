@@ -8,8 +8,9 @@ Blazing Fast and Lightweight router for React Based on state first..
 - No Dependencies
 - Blazing Fast update app state first and then Browser Sync.
 - Useful route information in `params`, `search`, `path` and `active` router properties.
-- Typescript first class.
+- Typescript first class, but works fine with javascript too.
 - Nesting Route.
+- Lazy loading for route component.
 - Hooks `onEnter` and `onLeave`.
 - Redirect.
 - Route Guard.
@@ -18,12 +19,12 @@ Blazing Fast and Lightweight router for React Based on state first..
 
 ## Installation
 
-`npm install rift-router --save`
+`npm i -s rift-router`
 
 ## Usage
 
 ```typescript
-import React from 'react';
+import React, {lazy} from 'react';
 import ReactDOM from 'react-dom';
 import { IRiftRoute, RiftProvider, RiftGate, RiftLink } from 'rift-router';
 
@@ -33,12 +34,13 @@ const About = () => <div>'About Component'</div>;
 const routes: IRiftRoute[] = [
   { path: '/', component: <Home /> },
   { path: '/about', component: () => <About /> },
+  { path: '/users', component: lazy(() => import('./users')),
 ];
 
 ReactDOM.render(
-  <RiftProvider routes={routes}>
-    <RiftLink to="/">Home</RiftLink> {/* navigate to Home component */}
-    <RiftLink to="/about">About</RiftLink> {/* navigate to About component */}
+  <RiftProvider routes={routes} fallback={<div>loading...</div>}>
+    <RiftLink to="/">Home</RiftLink>
+    <RiftLink to="/about">About</RiftLink>
     <RiftGate /> {/* render the component for current route */}
   </RiftProvider>,
   document.getElementById('root')
@@ -64,7 +66,7 @@ const routes = [
         onLeave: () => '...Do some logic when current route will change',
         onEnter: () => {
             if(!isUserLogged()) {
-                return '/';
+                return '/login';
             }
         }
     }
@@ -107,7 +109,37 @@ const routes: IRiftRoute[] = [
 ];
 ```
 
-For each nesting you must place a `<RiftGate/>` component to display current nesting component.
+`note:` For each nesting you must place a `<RiftGate/>` component to display current nesting component.
+
+#### Building your routes with many files and lazy loading components.
+
+```typescript
+// somewhere in the users module/folder
+export const usersRoutes = [
+  {
+    path: '',
+    component: React.lazy(import('./UserList')),
+  },
+  {
+    path: '/:id',
+    component: React.lazy(import('./UserDetails')),
+  },
+];
+```
+
+```typescript
+// building your routes with others routers files.
+const routes: IRiftRoute[] = [
+  {
+    path: '/users',
+    children: usersRoutes,
+  },
+];
+```
+
+Lazy loading your component will reduce the first load time, therefore your page will be show faster, then other component will be load in demand.
+
+Caveat: `React.lazy and Suspense are not yet available for server-side rendering. If you want to do code-splitting in a server rendered app check <a href="https://reactjs.org/docs/code-splitting.html#reactlazy">here</a>`
 
 ### `router` instance API:
 
@@ -144,21 +176,26 @@ const routes: IRiftRoute[] = [
 
 ## How it Work.
 
-`RiftRouter` create a router instance and share it using `React.Context` to be use deep in the component tree using
-`useRouter` hook.
+Pass your `routes` to `RiftProvider` and it will create a router instance and share it through `React.Context` to be use deep in the component tree
+with the `useRouter` hook.
+`RiftProvider` also accept a `fallback` prop where you can provide a component to will be shown by all yours `RiftGate` while lazy components finish to load.
+ex. `<RiftProvider routes={routes} fallback={<div>loading...</div>}>...</RiftProvider>`
 
 `RiftGate` works as a gateway to show the correct component for the active route. If you have nesting routes you must
-use the same number of `RiftGate` to render the nested components in the active route.
+use the same number of `RiftGate` to render the nested components in the active route. Also accept a `fallback` prop
+where you can provide a component to show while lazy components finish to load, this will override the `fallback` of the `RiftProvider`.
+ex. `<RiftGate fallback={<div>loading...</div>} />`
 
 `RiftLink` API:
 
 - `to` (string value to navigate on click event)
+  ex. `<RiftLink to="/users" />`
 
-Note: `We assume you have configure your environment, rift-router is build to work with react hooks`
+Note: `you need to use react@16.8.0 version or superior`
 
 ## TODO:
 
 #### Add Documentation for
 
-- Code Splitting
-- Server Side Rendering Example.
+- [x] Code Splitting.
+- [ ] Server Side Rendering Example.

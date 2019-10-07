@@ -64,6 +64,23 @@ const routes: IRiftRoute[] = [
       },
     ],
   },
+  {
+    path: '/posts',
+    children: [
+      {
+        path: '',
+        component: () => 'Posts List',
+      },
+      {
+        path: '/',
+        component: () => 'Create a Post',
+      },
+      {
+        path: '/:id?',
+        component: () => 'Edit a Post',
+      },
+    ],
+  },
 ];
 
 const routerSSR = new Router(routes, '/login');
@@ -166,6 +183,18 @@ test('Test Route Dashboard', () => {
   expect(router.path).toBe('/admin');
   expect(router.active.components[0]()).toBe('admin');
   expect(router.active.components[1]()).toBe('Admin Dashboard');
+});
+
+test('Test Posts Routes without parent component', () => {
+  const path = '/posts';
+  router.to(path);
+  expect(router.path).toBe('/posts');
+  expect(router.active.components[0]).toBeUndefined();
+  expect(router.active.components[1]()).toBe('Posts List');
+  router.to(`${path}/`);
+  expect(router.path).toBe('/posts/');
+  expect(router.active.components[0]).toBeUndefined();
+  expect(router.active.components[1]()).toBe('Create a Post');
 });
 
 test('Test OnEnter Guard Redirect', () => {

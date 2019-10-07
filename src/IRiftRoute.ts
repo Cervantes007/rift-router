@@ -5,6 +5,7 @@ export interface IRouter {
   params: any;
   search: any;
   active: any;
+  fallback: any;
   to: (path: string) => void;
 }
 

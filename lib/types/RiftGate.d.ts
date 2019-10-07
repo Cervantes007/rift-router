@@ -1,2 +1,6 @@
 /// <reference types="react" />
-export declare const RiftGate: () => JSX.Element;
+interface IRiftGate {
+  fallback?: any;
+}
+export declare const RiftGate: ({ fallback }: IRiftGate) => JSX.Element;
+export {};

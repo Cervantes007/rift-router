@@ -6,12 +6,13 @@ const initialValue: IRouter | any = {};
 export const RiftContext = React.createContext(initialValue);
 let router: Router;
 
-export class RiftProvider extends Component<{ children: any; routes: any }> {
+export class RiftProvider extends Component<{ children: any; routes: any; fallback?: any }> {
   constructor(props) {
     super(props);
     router = new Router(props.routes);
-    const { params, active, search, path } = router;
-    this.state = { params, active, search, path };
+    router.fallback = props.fallback || null;
+    const { params, active, search, path, fallback } = router;
+    this.state = { params, active, search, path, fallback };
 
     try {
       window &&
