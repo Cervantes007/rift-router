@@ -9,6 +9,7 @@ export declare class Router implements IRouter {
   active: any;
   fallback: any;
   constructor(myRoutes: IRiftRoute[], path?: string);
+  setPath(path: string): void;
   register: () => number;
   to(newPath?: string, fromHistory?: boolean): void;
   private updateActiveRoute;

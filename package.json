@@ -27,23 +27,22 @@
     "precommit": "pretty-quick --staged"
   },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",
-    "@types/react": "^16.7.18",
-    "@types/react-dom": "^16.0.11",
+    "@types/react": "^17.0.14",
+    "@types/react-dom": "^17.0.9",
     "husky": "^0.14.3",
     "jest": "^24.1.0",
     "prettier": "^1.15.3",
     "pretty-quick": "^1.4.1",
-    "react": "16.8.1",
-    "react-dom": "16.8.1",
+    "react-dom": "^17.0.2",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.7.0",
     "tslint-config-prettier": "^1.9.0",
-    "typescript": "^3.2.2"
+    "typescript": "^4.3.5"
   },
   "jest": {
     "transform": {

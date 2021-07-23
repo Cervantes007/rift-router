@@ -1,46 +1,36 @@
-import React, { Component } from 'react';
-import { Router } from './Router';
+import React, { createContext, memo, PropsWithChildren, useRef, useState } from 'react';
 import { IRouter } from './IRiftRoute';
+import { useInitRouter } from './useInitRouter';
 
 const initialValue: IRouter | any = {};
-export const RiftContext = React.createContext(initialValue);
-let router: Router;
+export const RiftContext = createContext(initialValue);
 
-export class RiftProvider extends Component<{ children: any; routes: any; fallback?: any }> {
-  constructor(props) {
-    super(props);
-    router = new Router(props.routes);
-    router.fallback = props.fallback || null;
-    const { params, active, search, path, fallback } = router;
-    this.state = { params, active, search, path, fallback };
+type RiftProviderProps = PropsWithChildren<{
+  routes: any;
+  fallback?: any;
+}>;
 
-    try {
-      window &&
-        window.addEventListener('popstate', () => {
-          const path = location ? `${location.pathname}${location.search}` : '/';
-          this.to(path !== 'blank' ? path : '/', true);
-        });
-    } catch (e) {
-      // if (e.message !== 'window is not defined') {
-      //   // console.log(e);
-      // }
-    }
-  }
+export const RiftProvider = memo(({ children, routes, fallback }: RiftProviderProps) => {
+  useRef(
+    window?.addEventListener('popstate', () => {
+      const path = location ? `${location.pathname}${location.search}` : '/';
+      to(path !== 'blank' ? path : '/', true);
+    })
+  );
 
-  updateState = () => {
-    const { params, active, search, path } = router;
-    this.setState({ params, active, search, path });
-  };
+  const router = useInitRouter(routes, fallback);
+  const [state, setState] = useState<any>({ ...router });
 
-  to = (path, fromHistory = false) => {
+  const updateState = () => setState({ ...router });
+
+  const to = (path, fromHistory = false) => {
     if (router.path !== path) {
       router.to(path, fromHistory);
-      this.updateState();
+      updateState();
     }
   };
 
-  render() {
-    const contextValue = { ...this.state, to: this.to, register: router.register };
-    return <RiftContext.Provider value={contextValue}>{this.props.children}</RiftContext.Provider>;
-  }
-}
+  const contextValue = { ...state, to };
+
+  return <RiftContext.Provider value={contextValue}>{children}</RiftContext.Provider>;
+});
