@@ -1,17 +1,9 @@
-import React from 'react';
-export declare const RiftLink: (
-  props: {
-    to: string;
-    className?: string;
-    onClick?: (e: any) => void;
-    children:
-      | string
-      | number
-      | boolean
-      | {}
-      | React.ReactElement<any>
-      | React.ReactNodeArray
-      | React.ReactPortal
-      | React.ReactNode[];
-  }
-) => JSX.Element;
+import { ReactNode } from 'react';
+declare type Props = {
+  to: string;
+  className?: string;
+  onClick?: (e: any) => void;
+  children: ReactNode | ReactNode[];
+};
+export declare const RiftLink: ({ to, onClick: click, className, children }: Props) => JSX.Element;
+export {};

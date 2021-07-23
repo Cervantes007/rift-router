@@ -1,26 +1,23 @@
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { IRouter } from './IRiftRoute';
 import { RiftContext } from './RiftProvider';
 
-export const RiftLink = (props: {
+type Props = {
   to: string;
   className?: string;
   onClick?: (e) => void;
-  children: React.ReactNode | React.ReactNode[];
-}) => {
-  const { to, onClick, className, children } = props;
+  children: ReactNode | ReactNode[];
+};
+
+export const RiftLink = ({ to, onClick: click, className, children }: Props) => {
   const router = useContext<IRouter>(RiftContext);
 
-  const click = e => {
+  const onClick = e => {
     if (router.path !== to) {
       router.to(to);
-      typeof onClick === 'function' && onClick(e);
+      click?.(e);
     }
   };
 
-  return (
-    <span onClick={click} className={className}>
-      {children}
-    </span>
-  );
+  return <span {...{ onClick, className }}>{children}</span>;
 };

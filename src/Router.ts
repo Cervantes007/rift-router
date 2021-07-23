@@ -1,7 +1,7 @@
 import { IRiftRoute, IRouter } from './IRiftRoute';
 
 export class Router implements IRouter {
-  private index: number = 0;
+  private index = 0;
   private defaultRoute: any;
   public routes: any[] = [];
   public path: string;
@@ -27,11 +27,9 @@ export class Router implements IRouter {
     this.updateActiveRoute();
   }
 
-  register = () => {
-    return this.index++;
-  };
+  register = () => this.index++;
 
-  to(newPath: string = '/', fromHistory = false) {
+  to(newPath = '/', fromHistory = false) {
     if (newPath !== this.path || fromHistory) {
       this.path = newPath;
       this.index = 0;
@@ -40,16 +38,14 @@ export class Router implements IRouter {
         try {
           window.history.pushState(null, null, this.path);
         } catch (e) {
-          // if (e.message !== 'window is not defined' && e.message !== 'location is not defined') {
-          //   // console.log(e);
-          // }
+          // code here..
         }
       }
     }
   }
 
   private updateActiveRoute() {
-    let useDefuaut = true;
+    let useDefault = true;
     const aux = this.path.split('?');
     const path = aux[0];
     let search = {};
@@ -62,17 +58,17 @@ export class Router implements IRouter {
       route.pattern = pattern;
       if (match) {
         this.setActiveRoute(route, params, search);
-        useDefuaut = false;
+        useDefault = false;
         break;
       }
     }
-    if (useDefuaut && this.defaultRoute && this.defaultRoute.path === '*') {
+    if (useDefault && this.defaultRoute && this.defaultRoute.path === '*') {
       this.setActiveRoute(this.defaultRoute);
     }
   }
 
   private setActiveRoute(route, params = {}, search = {}) {
-    this.active && this.active.onLeave && this.active.onLeave(this);
+    this.active?.onLeave?.(this);
     if (route.onEnter) {
       const redirectTo = route.onEnter(this);
       if (typeof redirectTo === 'string') {
@@ -89,28 +85,27 @@ export class Router implements IRouter {
     let aux = [];
     for (const route of routes) {
       const { children, component, path, onEnter, onLeave } = route;
+      const hook = {
+        onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
+        onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
+      };
       if (children) {
         aux = aux.concat(
-          this.setRoutes(children, components.concat(component), parent + path, {
-            onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
-            onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
-          })
+          this.setRoutes(children, components.concat(component), parent + path, hook)
         );
       } else {
         if (path === '*') {
           this.defaultRoute = {
             path: '*',
             components: components.concat(component),
-            onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
-            onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
+            ...hook,
           };
         } else {
           // Enforce: set clean 'path' url '//review' = '/review' - '////review//6' = '/review/6'
           aux.push({
             path: (parent + (path || '')).replace(/(\/)\1+/g, '/'),
             components: components.concat(component),
-            onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
-            onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
+            ...hook,
           });
         }
       }
@@ -141,12 +136,9 @@ export class Router implements IRouter {
   private queryString(querystring: string) {
     const pattern = /\??([\w]+)=([\w]+)&?/g;
     let search = {};
-    querystring.replace(
-      pattern,
-      (substring, $1, $2): any => {
-        return (search = { ...search, ...{ [$1]: $2 } });
-      }
-    );
+    querystring.replace(pattern, (substring, $1, $2): any => {
+      return (search = { ...search, ...{ [$1]: $2 } });
+    });
     return search;
   }
 }
