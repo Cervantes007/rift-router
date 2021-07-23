@@ -50,7 +50,7 @@ export class Router implements IRouter {
     const path = aux[0];
     let search = {};
     if (aux.length === 2 && aux[1]) {
-      const [searchAux, hash] = aux[1].split('#');
+      const [searchAux] = aux[1].split('#');
       search = aux.length === 2 ? this.queryString(`?${searchAux}`) : {};
     }
     for (const route of this.routes) {
@@ -87,25 +87,23 @@ export class Router implements IRouter {
       const { children, component, path, onEnter, onLeave } = route;
       const hook = {
         onEnter: hooks.onEnter ? hooks.onEnter : onEnter,
-        onLeave: hooks.onLeave ? hooks.onLeave : onLeave,
+        onLeave: hooks.onLeave ? hooks.onLeave : onLeave
       };
       if (children) {
-        aux = aux.concat(
-          this.setRoutes(children, components.concat(component), parent + path, hook)
-        );
+        aux = aux.concat(this.setRoutes(children, components.concat(component), parent + path, hook));
       } else {
         if (path === '*') {
           this.defaultRoute = {
             path: '*',
             components: components.concat(component),
-            ...hook,
+            ...hook
           };
         } else {
           // Enforce: set clean 'path' url '//review' = '/review' - '////review//6' = '/review/6'
           aux.push({
             path: (parent + (path || '')).replace(/(\/)\1+/g, '/'),
             components: components.concat(component),
-            ...hook,
+            ...hook
           });
         }
       }

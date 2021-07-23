@@ -5,10 +5,7 @@ import { useInitRouter } from './useInitRouter';
 const initialValue: IRouter | any = {};
 export const RiftContext = createContext(initialValue);
 
-type RiftProviderProps = PropsWithChildren<{
-  routes: any;
-  fallback?: any;
-}>;
+type RiftProviderProps = PropsWithChildren<{ routes: any; fallback?: any }>;
 
 export const RiftProvider = memo(({ children, routes, fallback }: RiftProviderProps) => {
   useRef(

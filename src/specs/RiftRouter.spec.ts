@@ -3,24 +3,24 @@ import { Router } from '../Router';
 const routes: IRiftRoute[] = [
   {
     path: '/',
-    component: () => 'home',
+    component: () => 'home'
   },
   {
     path: '/redirect',
     component: () => 'redirect',
-    onEnter: () => '/',
+    onEnter: () => '/'
   },
   {
     path: '*',
-    component: () => 'default',
+    component: () => 'default'
   },
   {
     path: '/login',
-    component: () => 'login',
+    component: () => 'login'
   },
   {
     path: '/admin/add-edit-user/:id?',
-    component: () => 'testManuel',
+    component: () => 'testManuel'
   },
   {
     path: '',
@@ -28,11 +28,11 @@ const routes: IRiftRoute[] = [
     children: [
       {
         path: '/contacts',
-        component: () => 'contacts',
+        component: () => 'contacts'
       },
       {
         path: '/contacts/:id',
-        component: () => 'contacts editor',
+        component: () => 'contacts editor'
       },
       {
         path: '/categories/:id',
@@ -40,11 +40,11 @@ const routes: IRiftRoute[] = [
         children: [
           {
             path: '/tags/:tagsId',
-            component: () => 'tags',
-          },
-        ],
-      },
-    ],
+            component: () => 'tags'
+          }
+        ]
+      }
+    ]
   },
   {
     path: '/admin',
@@ -52,35 +52,35 @@ const routes: IRiftRoute[] = [
     children: [
       {
         path: '',
-        component: () => 'Admin Dashboard',
+        component: () => 'Admin Dashboard'
       },
       {
         path: '/users',
-        component: () => 'users',
+        component: () => 'users'
       },
       {
         path: '/users/:id?',
-        component: () => 'users editor',
-      },
-    ],
+        component: () => 'users editor'
+      }
+    ]
   },
   {
     path: '/posts',
     children: [
       {
         path: '',
-        component: () => 'Posts List',
+        component: () => 'Posts List'
       },
       {
         path: '/',
-        component: () => 'Create a Post',
+        component: () => 'Create a Post'
       },
       {
         path: '/:id?',
-        component: () => 'Edit a Post',
-      },
-    ],
-  },
+        component: () => 'Edit a Post'
+      }
+    ]
+  }
 ];
 
 const routerSSR = new Router(routes, '/login');
@@ -115,7 +115,9 @@ test('Test Manuel', () => {
   const path = '/admin/add-edit-user/NGM2OGUyMzYwNDM4MTNhMmUyOTFmZmY4NTgzNzk5ZjY6MQ';
   router.to(path);
   expect(router.path).toBe(path);
-  expect(router.params).toEqual({ id: 'NGM2OGUyMzYwNDM4MTNhMmUyOTFmZmY4NTgzNzk5ZjY6MQ' });
+  expect(router.params).toEqual({
+    id: 'NGM2OGUyMzYwNDM4MTNhMmUyOTFmZmY4NTgzNzk5ZjY6MQ'
+  });
   expect(router.active.components[0]()).toBe('testManuel');
 });
 
