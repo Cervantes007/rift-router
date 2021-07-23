@@ -4,9 +4,7 @@ declare type RiftProviderProps = PropsWithChildren<{
   routes: any;
   fallback?: any;
 }>;
-export declare const RiftProvider: React.MemoExoticComponent<({
-  children,
-  routes,
-  fallback,
-}: RiftProviderProps) => JSX.Element>;
+export declare const RiftProvider: React.MemoExoticComponent<
+  ({ children, routes, fallback }: RiftProviderProps) => JSX.Element
+>;
 export {};
