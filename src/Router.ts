@@ -1,5 +1,7 @@
 import { IRiftRoute, IRouter } from './IRiftRoute';
 
+const PATTERN_QUERYSTRING = /\??([\w]+)=([\w]+)&?/g;
+
 export class Router implements IRouter {
   private index = 0;
   private defaultRoute: any;
@@ -12,17 +14,8 @@ export class Router implements IRouter {
 
   constructor(myRoutes: IRiftRoute[], path?: string) {
     this.routes = this.setRoutes([...myRoutes]);
-    if (path) {
-      this.path = path;
-    } else {
-      try {
-        this.path = location ? `${location.pathname}${location.search}` : '/';
-      } catch (e) {
-        // if (e.message !== 'location is not defined') {
-        //   // console.log(e);
-        // }
-      }
-    }
+    const locationPath = location ? `${location.pathname}${location.search}` : '/';
+    this.path = path ? path : locationPath;
 
     this.updateActiveRoute();
   }
@@ -132,10 +125,9 @@ export class Router implements IRouter {
   }
 
   private queryString(querystring: string) {
-    const pattern = /\??([\w]+)=([\w]+)&?/g;
-    let search = {};
-    querystring.replace(pattern, (substring, $1, $2): any => {
-      return (search = { ...search, ...{ [$1]: $2 } });
+    const search = {};
+    querystring.replace(PATTERN_QUERYSTRING, (substring, $1, $2): any => {
+      search[$1] = $2;
     });
     return search;
   }
