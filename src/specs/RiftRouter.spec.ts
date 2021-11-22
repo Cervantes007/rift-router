@@ -179,6 +179,12 @@ test('Test Query String', () => {
   expect(router.active.components[1]()).toBe('contacts');
 });
 
+test('Test Query String (two params)', () => {
+  const path = '/contacts?type=plumber&other=more';
+  router.to(path);
+  expect(router.search).toEqual({ type: 'plumber', other: 'more' });
+});
+
 test('Test Route Dashboard', () => {
   const path = '/admin';
   router.to(path);
